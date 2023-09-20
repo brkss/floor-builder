@@ -2,8 +2,41 @@ import { KonvaEventObject } from 'konva/lib/Node';
 import React from 'react';
 import { Line, Stage, Layer, Circle} from 'react-konva';
 
+// helper function
 
+// -- calculate point distance  
+const CPD = (pt1: Vector, pt2: Vector) => {
+	return Math.sqrt(Math.pow(pt2.x - pt1.x, 2) + Math.pow(pt2.y - pt1.y, 2))
+}
 
+const ADJUST_LINE = (line: Line, lines: Line[]) : Line => {
+	if(lines.length === 0)
+		return (line)
+	let pt1_close = lines[0].pt1;
+	let pt2_close = lines[0].pt2;
+
+	lines.forEach((l) => {
+		if(CPD(l.pt1, line.pt1) < CPD(line.pt1, pt1_close)){
+			pt1_close = l.pt1;
+		}else if(CPD(l.pt2, line.pt1) < CPD(line.pt1, pt1_close)){
+			pt1_close = l.pt2;
+		}else if(CPD(l.pt1, line.pt2) < CPD(line.pt2, pt2_close)){
+			pt2_close = l.pt1;
+		}else if(CPD(l.pt2, line.pt2) < CPD(line.pt2, pt2_close)){
+			pt2_close = l.pt2
+		}
+	});
+
+	if(CPD(line.pt1, pt1_close) > 35)
+		pt1_close = line.pt1;
+	if(CPD(line.pt2, pt2_close) > 35)
+		pt2_close = line.pt2;
+
+	const adjusted_line : Line = { pt1: pt1_close, pt2: pt2_close }
+	return adjusted_line;
+}
+
+// needed types !
 interface Vector {
 	x: number;
 	y: number;
@@ -38,14 +71,10 @@ export const Application : React.FC = () => {
 		});
 		
 		if(startLine)
-			setLinePoints({pt1: linePoints!.pt1, pt2: { x: evt.evt.x, y: evt.evt.y}});
+			setLinePoints({pt1: linePoints!.pt1, pt2: { x: _x, y: _y}});
 	}
 
 	const handleClick = (evt: KonvaEventObject<MouseEvent>) => {
-		if(stageProps.scale !== 1){
-			setStageProps({...stageProps, scale: 1})
-			return;
-		}
 		const stage = evt.target.getStage();
 		if(!stage)
 			return;
@@ -62,8 +91,12 @@ export const Application : React.FC = () => {
 			setLinePoints({pt1: { x: _x, y: _y}, pt2:{ x: _x, y: _y} });
 		}else {
 			setStartLine(false);
-			setLinePoints({pt1: linePoints!.pt1, pt2: { x: _x, y: _x}});
-			setLines([...lines, linePoints as Line]);
+			setLinePoints({pt1: linePoints!.pt1, pt2: { x: _x, y: _y}});
+			//const new_line : Line = { pt1: linePoints!.pt1, pt2: linePoints!.pt2 } 	
+			const new_line : Line = ADJUST_LINE(linePoints!, lines);
+			console.log("old line : ", linePoints);
+			console.log("new line : ", new_line);
+			setLines([...lines, new_line as Line]);
 			setLinePoints(null);
 		}
 	}
@@ -103,14 +136,15 @@ export const Application : React.FC = () => {
 		}
 	};
 
+
 	const calculateDotPositions = () => {
-    const positions = [];
-    for (let x = 0; x < window.innerWidth * 1.5; x += 40) {
-      for (let y = 0; y < window.innerHeight * 1.5; y += 40) {
-        positions.push({ x, y });
-      }
-    }
-    return positions;
+		const positions = [];
+		for (let x = 0; x < window.innerWidth * 1.5; x += 40) {
+		  for (let y = 0; y < window.innerHeight * 1.5; y += 40) {
+			positions.push({ x, y });
+		  }
+		}
+		return positions;
   };
 
   const dotPositions = calculateDotPositions();
