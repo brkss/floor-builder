@@ -9,6 +9,23 @@ const CPD = (pt1: Vector, pt2: Vector) => {
 	return Math.sqrt(Math.pow(pt2.x - pt1.x, 2) + Math.pow(pt2.y - pt1.y, 2))
 }
 
+const ADJUST_LINE_WITH_GRID = (line: Line) : Line => {
+	const grid = CALCULATE_DOT_POS();
+	
+	let new_pt1 : Vector =  {...line.pt1};
+	let new_pt2 : Vector =  {...line.pt2};
+
+	for(let i = 0; i < grid.length; i++){
+		if(CPD(line.pt1, grid[i]) < 20){
+			new_pt1 = grid[i];		
+		}else if (CPD(line.pt2, grid[i]) < 20){
+			new_pt2 = grid[i];
+		}
+	}
+
+	return {pt1: new_pt1, pt2: new_pt2};
+}
+
 const ADJUST_LINE = (line: Line, lines: Line[]) : Line => {
 	if(lines.length === 0)
 		return (line)
@@ -35,6 +52,16 @@ const ADJUST_LINE = (line: Line, lines: Line[]) : Line => {
 	const adjusted_line : Line = { pt1: pt1_close, pt2: pt2_close }
 	return adjusted_line;
 }
+
+const CALCULATE_DOT_POS = () : Vector[] => {
+		const positions = [];
+		for (let x = 0; x < window.innerWidth * 1.5; x += 40) {
+		  for (let y = 0; y < window.innerHeight * 1.5; y += 40) {
+			positions.push({ x, y });
+		  }
+		}
+		return positions;
+  };
 
 // needed types !
 interface Vector {
@@ -92,11 +119,14 @@ export const Application : React.FC = () => {
 		}else {
 			setStartLine(false);
 			setLinePoints({pt1: linePoints!.pt1, pt2: { x: _x, y: _y}});
-			//const new_line : Line = { pt1: linePoints!.pt1, pt2: linePoints!.pt2 } 	
-			const new_line : Line = ADJUST_LINE(linePoints!, lines);
-			console.log("old line : ", linePoints);
-			console.log("new line : ", new_line);
+		
+			// adjust drawed line !
+			const line_with_grid = ADJUST_LINE_WITH_GRID(linePoints!);
+			const new_line : Line = ADJUST_LINE(line_with_grid, lines);
+			//console.log("new line angle : ", LINE_ANGLES(new_line));
 			setLines([...lines, new_line as Line]);
+
+
 			setLinePoints(null);
 		}
 	}
@@ -137,17 +167,9 @@ export const Application : React.FC = () => {
 	};
 
 
-	const calculateDotPositions = () => {
-		const positions = [];
-		for (let x = 0; x < window.innerWidth * 1.5; x += 40) {
-		  for (let y = 0; y < window.innerHeight * 1.5; y += 40) {
-			positions.push({ x, y });
-		  }
-		}
-		return positions;
-  };
 
-  const dotPositions = calculateDotPositions();
+
+  const dotPositions = CALCULATE_DOT_POS();
 
 
 	return (
