@@ -103,6 +103,19 @@ export const Application : React.FC = () => {
 		}
 	};
 
+	const calculateDotPositions = () => {
+    const positions = [];
+    for (let x = 0; x < window.innerWidth * 1.5; x += 40) {
+      for (let y = 0; y < window.innerHeight * 1.5; y += 40) {
+        positions.push({ x, y });
+      }
+    }
+    return positions;
+  };
+
+  const dotPositions = calculateDotPositions();
+
+
 	return (
 		<div >
 			<Stage 
@@ -127,6 +140,15 @@ export const Application : React.FC = () => {
 				y={stageProps.y}
 				>
 				<Layer >
+					{dotPositions.map((position, index) => (
+						<Circle
+						  key={`dot-${index}`}
+						  x={position.x}
+						  y={position.y}
+						  radius={1}
+						  fill="red"
+						/>
+					  ))}
 					<Circle 
 						radius={5}
 						fill={'white'}
