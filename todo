@@ -1,0 +1,14 @@
+
+
+TODO:
+	* adding tool bar 
+		* delete / edit line 
+		* object depth 
+		* 
+	* arrange stage scale with pointer / lines positions
+	* mark sectors 
+	* scaling stage properly 
+	* undo and redo 
+	* compression for server upload 
+	* parse and unparse readable files by effy 
+	* 
