@@ -1,6 +1,7 @@
 import { KonvaEventObject } from 'konva/lib/Node';
 import React from 'react';
 import { Line, Stage, Layer, Circle} from 'react-konva';
+import { BuilderToolBar } from './BuilderToolBar';
 
 // helper function
 
@@ -56,7 +57,7 @@ const ADJUST_LINE = (line: Line, lines: Line[]) : Line => {
 const CALCULATE_DOT_POS = () : Vector[] => {
 		const positions = [];
 		for (let x = 0; x < window.innerWidth * 1.5; x += 40) {
-		  for (let y = 0; y < window.innerHeight * 1.5; y += 40) {
+		  for (let y = 0; y < window.innerHeight ; y += 40) {
 			positions.push({ x, y });
 		  }
 		}
@@ -174,6 +175,7 @@ export const Application : React.FC = () => {
 
 	return (
 		<div >
+			<BuilderToolBar />
 			<Stage 
 				onWheel={handleWheel}
 				width={window.innerWidth} 
