@@ -12,6 +12,7 @@ const _tmp = [
 	{
 		name: "new",
 		Icon: AiOutlinePlus,
+		action: Actions.ADDWALL,
 		subs: [
 			{
 				name: "door",

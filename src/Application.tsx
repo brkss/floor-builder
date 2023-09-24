@@ -40,6 +40,8 @@ export const Application : React.FC = () => {
 	}
 
 	const handleClick = (evt: KonvaEventObject<MouseEvent>) => {
+		if(action !== Actions.ADDWALL && action !== Actions.ADDWINDOW && action !== Actions.ADDPORTAL)
+			return;
 		const stage = evt.target.getStage();
 		if(!stage)
 			return;
@@ -121,6 +123,8 @@ export const Application : React.FC = () => {
 
 	}
 
+	// lines ops 
+
 	const lineMouseEnter = (id?: string) => {
 		if(!id)
 			return;
@@ -143,6 +147,19 @@ export const Application : React.FC = () => {
 			}
 			return line;
 		}))
+	}
+
+	const clickedOnLine = (id?: string) => {
+		if(!id)
+			return;
+		if(action === Actions.DELETE){
+			const _tmp = [...lines]
+			const index = _tmp.findIndex(x => x.id === id)
+			if(index < 0)
+				return;
+			_tmp.splice(index, 1)
+			setLines([..._tmp]);
+		}
 	}
 
 	return (
@@ -208,6 +225,7 @@ export const Application : React.FC = () => {
 						>
 							
 							<LineShape
+								onClick={(_) => clickedOnLine(line.id)}
 								key={key}
 								//x={20}
 								//y={200}
