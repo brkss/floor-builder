@@ -8,6 +8,8 @@ export interface Line {
 	pt1: Vector;
 	pt2: Vector;
 	color: string;
+	id?: string
+	opacity?: number;
 }
 
 // remove string values after !

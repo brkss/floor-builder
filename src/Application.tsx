@@ -1,6 +1,6 @@
-import { KonvaEventObject } from 'konva/lib/Node';
+import { KonvaEventListener, KonvaEventObject } from 'konva/lib/Node';
 import React from 'react';
-import { Line as LineShape, Stage, Layer, Circle} from 'react-konva';
+import { Line as LineShape, Stage, Layer, Circle, Group} from 'react-konva';
 import { BuilderToolBar } from './BuilderToolBar';
 import { Actions, Vector, Line } from './types';
 import { 
@@ -62,7 +62,7 @@ export const Application : React.FC = () => {
 			const line_with_grid = ADJUST_LINE_WITH_GRID(linePoints!);
 			const new_line : Line = ADJUST_LINE(line_with_grid, lines);
 			//console.log("new line angle : ", LINE_ANGLES(new_line));
-			setLines([...lines, new_line as Line]);
+			setLines([...lines, {...new_line, id: (lines.length + 1).toString()} as Line]);
 
 
 			setLinePoints(null);
@@ -121,6 +121,30 @@ export const Application : React.FC = () => {
 
 	}
 
+	const lineMouseEnter = (id?: string) => {
+		if(!id)
+			return;
+		console.log("mouse enters line")	
+		setLines(curr => curr.map(line => {
+			if(line.id && line.id === id){
+				line.opacity = .7
+			}
+			return line;
+		}))
+	}
+
+	const lineMouseLeave = (id?: string) => {
+		if(!id)
+			return;
+		console.log("mouse leaves line")	
+		setLines(curr => curr.map(line => {
+			if(line.id && line.id === id){
+				line.opacity = 1
+			}
+			return line;
+		}))
+	}
+
 	return (
 		<div >
 			<ActionInfo action={action} />
@@ -177,16 +201,23 @@ export const Application : React.FC = () => {
 					{
 					lines.map((line, key) => (
 
-						<div key={key}>
+						<Group 
+							key={key}
+							onPointerEnter={(_) => lineMouseEnter(line.id)}
+							onPointerLeave={(_) => lineMouseLeave(line.id)}
+						>
 							
 							<LineShape
 								key={key}
 								//x={20}
 								//y={200}
 								points={[line.pt1.x, line.pt1.y, line.pt2.x, line.pt2.y]}
-								tension={0.2}
+								tension={2}
 								closed
 								stroke={line.color}
+								onPointerEnter={(_) => lineMouseEnter(line.id)}
+								onPointerLeave={(_) => lineMouseLeave(line.id)}
+								opacity={line.opacity || 1}
 							/>
 							<Circle 
 								radius={3}
@@ -200,7 +231,7 @@ export const Application : React.FC = () => {
 								x={line.pt2.x}
 								y={line.pt2.y}
 							/>
-						</div>
+						</Group>
 					))
 					}
 				</Layer>

@@ -20,6 +20,8 @@ export const ActionInfo : React.FC<Props> = ({action}) => {
 			setCurrentAction("add window")
 		else if(action === Actions.ADDPORTAL)
 			setCurrentAction("add door")
+		else if(action === Actions.DELETE)
+			setCurrentAction("delete")
 	}, [action])
 
 
