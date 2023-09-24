@@ -8,6 +8,7 @@ import {
 	ADJUST_LINE_WITH_GRID, 
 	ADJUST_LINE  
 } from './helpers'
+import { ActionInfo } from './ActionInfo';
 
 export const Application : React.FC = () => {
 
@@ -114,7 +115,7 @@ export const Application : React.FC = () => {
 		else if(ac === Actions.ADDWINDOW)
 			setLineColor("#ffd60a")
 		else if(ac === Actions.ADDPORTAL)
-			setLineColor("mediumpurple")
+			setLineColor("#52b788")
 		
 		console.log("line color :", lineColor)
 
@@ -122,6 +123,7 @@ export const Application : React.FC = () => {
 
 	return (
 		<div >
+			<ActionInfo action={action} />
 			<BuilderToolBar action={handleChangingAction} />
 			<Stage 
 				onWheel={handleWheel}
