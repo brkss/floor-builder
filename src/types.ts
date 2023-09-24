@@ -7,6 +7,7 @@ export interface Vector {
 export interface Line {
 	pt1: Vector;
 	pt2: Vector;
+	color: string;
 }
 
 // remove string values after !

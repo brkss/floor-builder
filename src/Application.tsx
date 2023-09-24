@@ -9,13 +9,10 @@ import {
 	ADJUST_LINE  
 } from './helpers'
 
-// helper function
-
-
-
 export const Application : React.FC = () => {
 
 	const [action, setAction] = React.useState<Actions>(Actions.ADDWALL)
+	const [lineColor, setLineColor] = React.useState<string>("white")
 	const [pos, setPos] = React.useState<Vector>({x: 0, y: 0})
 	const [startLine, setStartLine] = React.useState<boolean>(false);
 	const [linePoints, setLinePoints] = React.useState<Line | null>(null);
@@ -38,7 +35,7 @@ export const Application : React.FC = () => {
 		});
 		
 		if(startLine)
-			setLinePoints({pt1: linePoints!.pt1, pt2: { x: _x, y: _y}});
+			setLinePoints({...linePoints!, pt2: { x: _x, y: _y}});
 	}
 
 	const handleClick = (evt: KonvaEventObject<MouseEvent>) => {
@@ -55,10 +52,10 @@ export const Application : React.FC = () => {
 
 		if(!startLine){
 			setStartLine(true);
-			setLinePoints({pt1: { x: _x, y: _y}, pt2:{ x: _x, y: _y} });
+			setLinePoints({pt1: { x: _x, y: _y}, pt2:{ x: _x, y: _y}, color: lineColor});
 		}else {
 			setStartLine(false);
-			setLinePoints({pt1: linePoints!.pt1, pt2: { x: _x, y: _y}});
+			setLinePoints({...linePoints!, pt2: { x: _x, y: _y}});
 		
 			// adjust drawed line !
 			const line_with_grid = ADJUST_LINE_WITH_GRID(linePoints!);
@@ -107,14 +104,25 @@ export const Application : React.FC = () => {
 	};
 
 
+  	const dotPositions = CALCULATE_DOT_POS();
 
+	const handleChangingAction = (ac: Actions) => {
+		console.log("change action : ", ac)
+		setAction(ac);
+		if(ac === Actions.ADDWALL)
+			setLineColor("white")
+		else if(ac === Actions.ADDWINDOW)
+			setLineColor("#ffd60a")
+		else if(ac === Actions.ADDPORTAL)
+			setLineColor("mediumpurple")
+		
+		console.log("line color :", lineColor)
 
-  const dotPositions = CALCULATE_DOT_POS();
-
+	}
 
 	return (
 		<div >
-			<BuilderToolBar action={(action) => {}} />
+			<BuilderToolBar action={handleChangingAction} />
 			<Stage 
 				onWheel={handleWheel}
 				width={window.innerWidth} 
@@ -167,7 +175,17 @@ export const Application : React.FC = () => {
 					{
 					lines.map((line, key) => (
 
-						<div>
+						<div key={key}>
+							
+							<LineShape
+								key={key}
+								//x={20}
+								//y={200}
+								points={[line.pt1.x, line.pt1.y, line.pt2.x, line.pt2.y]}
+								tension={0.2}
+								closed
+								stroke={line.color}
+							/>
 							<Circle 
 								radius={3}
 								fill={'white'}
@@ -179,15 +197,6 @@ export const Application : React.FC = () => {
 								fill={'white'}
 								x={line.pt2.x}
 								y={line.pt2.y}
-							/>
-							<LineShape
-								key={key}
-								//x={20}
-								//y={200}
-								points={[line.pt1.x, line.pt1.y, line.pt2.x, line.pt2.y]}
-								tension={0.2}
-								closed
-								stroke="white"
 							/>
 						</div>
 					))

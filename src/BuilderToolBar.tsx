@@ -77,8 +77,8 @@ export const BuilderToolBar : React.FC<Props> = ({action}) => {
 			<Box display={'flex'} flexDir={'column'} alignItems={'end'} p={'20px'}>
 				{
 					_tmp.map((item, key) => (
-						<Box display={item.subs ? "flex" : "inherit"} flexDir={'row-reverse'} cursor={'pointer'}>
-							<Box transition={'.3s'} _hover={{transform: 'translateY(-5px)', transition: '.3s'}} mb={'20px'} key={key} textAlign={'center'} onMouseEnter={(_) => handleHoverIn(item.subs?.length || 0)} onMouseLeave={(_) => handleHoverOut(item.subs?.length || 0)}>
+						<Box  key={key} display={item.subs ? "flex" : "inherit"} flexDir={'row-reverse'} cursor={'pointer'}>
+							<Box transition={'.3s'} _hover={{transform: 'translateY(-5px)', transition: '.3s'}} mb={'20px'} key={key} textAlign={'center'} onMouseEnter={(_) => handleHoverIn(item.subs?.length || 0)} onMouseLeave={(_) => handleHoverOut(item.subs?.length || 0)} onClick={() => action(item.action!)} >
 								<Center h={'45px'} w={'45px'} bg={'white'} rounded={'100%'}>
 									<item.Icon size={20} />
 								</Center>
@@ -87,7 +87,7 @@ export const BuilderToolBar : React.FC<Props> = ({action}) => {
 							{<Box display={'flex'} onMouseEnter={(_) => handleHoverIn(item.subs?.length || 0)} onMouseLeave={(_) => handleHoverOut(item.subs?.length || 0)} >
 								{
 									item.subs && item.subs.map((sub, key) => (
-										<AnimatedBox mr={'20px'}  key={key} textAlign={'center'}  style={{opacity, transform: y.interpolate(v => `translateX(${v}%`)}}>
+										<AnimatedBox mr={'20px'}  key={key} textAlign={'center'}  style={{opacity, transform: y.interpolate(v => `translateX(${v}%`)}} onClick={() => action(sub.action)} >
 											<Center transition={'.3s'} _hover={{transform: 'translateY(-5px)', transition: '.3s'}} h={'45px'} w={'45px'} bg={'white'} rounded={'100%'}>
 												<sub.Icon size={20} />
 											</Center>

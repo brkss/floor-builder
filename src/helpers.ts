@@ -30,7 +30,7 @@ export const ADJUST_LINE_WITH_GRID = (line: Line) : Line => {
 		}
 	}
 
-	return {pt1: new_pt1, pt2: new_pt2};
+	return {pt1: new_pt1, pt2: new_pt2, color: line.color};
 }
 
 export const ADJUST_LINE = (line: Line, lines: Line[]) : Line => {
@@ -56,6 +56,6 @@ export const ADJUST_LINE = (line: Line, lines: Line[]) : Line => {
 	if(CPD(line.pt2, pt2_close) > 35)
 		pt2_close = line.pt2;
 
-	const adjusted_line : Line = { pt1: pt1_close, pt2: pt2_close }
+	const adjusted_line : Line = { pt1: pt1_close, pt2: pt2_close, color: line.color }
 	return adjusted_line;
 }
