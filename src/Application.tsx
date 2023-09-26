@@ -6,14 +6,16 @@ import { Actions, Vector, Line } from './types';
 import { 
 	CALCULATE_DOT_POS, 
 	ADJUST_LINE_WITH_GRID, 
-	ADJUST_LINE  
+	ADJUST_LINE ,
 } from './helpers'
 import { ActionInfo } from './ActionInfo';
+import { COLORS } from './constants';
+
 
 export const Application : React.FC = () => {
 
 	const [action, setAction] = React.useState<Actions>(Actions.ADDWALL)
-	const [lineColor, setLineColor] = React.useState<string>("white")
+	const [lineColor, setLineColor] = React.useState<string>(COLORS.WALLCOLOR)
 	const [pos, setPos] = React.useState<Vector>({x: 0, y: 0})
 	const [startLine, setStartLine] = React.useState<boolean>(false);
 	const [linePoints, setLinePoints] = React.useState<Line | null>(null);
@@ -34,6 +36,7 @@ export const Application : React.FC = () => {
 			x: _x, 
 			y: _y
 		});
+		
 		
 		if(startLine)
 			setLinePoints({...linePoints!, pt2: { x: _x, y: _y}});
@@ -115,9 +118,9 @@ export const Application : React.FC = () => {
 		if(ac === Actions.ADDWALL)
 			setLineColor("white")
 		else if(ac === Actions.ADDWINDOW)
-			setLineColor("#ffd60a")
+			setLineColor(COLORS.WINDOWCOLOR)
 		else if(ac === Actions.ADDPORTAL)
-			setLineColor("#52b788")
+			setLineColor(COLORS.DOORCOLOR)
 		
 		console.log("line color :", lineColor)
 
@@ -128,7 +131,6 @@ export const Application : React.FC = () => {
 	const lineMouseEnter = (id?: string) => {
 		if(!id)
 			return;
-		console.log("mouse enters line")	
 		setLines(curr => curr.map(line => {
 			if(line.id && line.id === id){
 				line.opacity = .7
@@ -140,7 +142,6 @@ export const Application : React.FC = () => {
 	const lineMouseLeave = (id?: string) => {
 		if(!id)
 			return;
-		console.log("mouse leaves line")	
 		setLines(curr => curr.map(line => {
 			if(line.id && line.id === id){
 				line.opacity = 1
@@ -229,7 +230,12 @@ export const Application : React.FC = () => {
 								key={key}
 								//x={20}
 								//y={200}
-								points={[line.pt1.x, line.pt1.y, line.pt2.x, line.pt2.y]}
+								points={[
+									line.pt1.x, 
+									line.pt1.y, 
+									line.pt2.x, 
+									line.pt2.y
+								]}
 								tension={2}
 								closed
 								stroke={line.color}

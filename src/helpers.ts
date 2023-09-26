@@ -1,5 +1,12 @@
 import { Line, Vector, } from './types';
 
+export const GET_EDIT_LINE_ID = (ld: string) => {
+	return ld.split(":")[0];
+}
+
+export const GET_EDIT_LINE_PT = (ld: string) => {
+	return ld.split(":")[1];
+}
 
 export const CALCULATE_DOT_POS = () : Vector[] => {
 		const positions = [];

@@ -34,7 +34,7 @@ const _tmp = [
 	{
 		name: "edit",
 		Icon: AiOutlineEdit,
-		acton: Actions.EDIT
+		action: Actions.EDIT
 	},
 	{
 		name: "delete",
