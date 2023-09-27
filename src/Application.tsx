@@ -10,7 +10,7 @@ import {
 } from './helpers'
 import { ActionInfo } from './ActionInfo';
 import { COLORS } from './constants';
-
+import { mapEncoder } from './parser';
 
 export const Application : React.FC = () => {
 
@@ -68,6 +68,7 @@ export const Application : React.FC = () => {
 			const new_line : Line = ADJUST_LINE(line_with_grid, lines);
 			//console.log("new line angle : ", LINE_ANGLES(new_line));
 			setLines([...lines, {...new_line, id: (lines.length + 1).toString()} as Line]);
+			console.log("lines :", lines)
 
 
 			setLinePoints(null);
@@ -89,7 +90,7 @@ export const Application : React.FC = () => {
 		const scaleBy = 1.05;
 		const stage = e.target.getStage();
 		if (!stage)
-		return;
+			return;
 		const oldScale = stage.scaleX();
 		const pointer = stage.getPointerPosition();
 
@@ -109,7 +110,6 @@ export const Application : React.FC = () => {
 		}
 	};
 
-
   	const dotPositions = CALCULATE_DOT_POS();
 
 	const handleChangingAction = (ac: Actions) => {
@@ -123,11 +123,9 @@ export const Application : React.FC = () => {
 			setLineColor(COLORS.DOORCOLOR)
 		
 		console.log("line color :", lineColor)
-
 	}
-
+	
 	// lines ops 
-
 	const lineMouseEnter = (id?: string) => {
 		if(!id)
 			return;
@@ -163,10 +161,16 @@ export const Application : React.FC = () => {
 		}
 	}
 
+
+	// save project 
+	const handleSave = () => {
+		const map = mapEncoder(lines, { w: window.innerWidth, h: window.innerHeight });
+		console.log("map : ", map);
+	}
 	return (
 		<div >
 			<ActionInfo action={action} />
-			<BuilderToolBar action={handleChangingAction} />
+			<BuilderToolBar action={handleChangingAction} save={handleSave} />
 			<Stage 
 				onWheel={handleWheel}
 				width={window.innerWidth} 

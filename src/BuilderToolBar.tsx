@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Text, Center } from '@chakra-ui/react';
-import { AiOutlinePlus, AiOutlineEdit, AiOutlineDelete, AiOutlineColumnHeight } from 'react-icons/ai'
+import { AiOutlineSave, AiOutlinePlus, AiOutlineEdit, AiOutlineDelete, AiOutlineColumnHeight } from 'react-icons/ai'
 import { BsPlusSquareDotted, BsDoorClosed } from "react-icons/bs"
 import { TbWindow, TbWall } from 'react-icons/tb'
 import { animated, useSpring } from '@react-spring/web'
@@ -55,9 +55,10 @@ const _tmp = [
 
 interface Props {
 	action: (action: Actions) => void;
+	save: () => void;
 }
 
-export const BuilderToolBar : React.FC<Props> = ({action}) => {
+export const BuilderToolBar : React.FC<Props> = ({action, save}) => {
 
 	const [{opacity, y}, set] = useSpring(() => ({ opacity: 0, y: 0 }))
 
@@ -75,7 +76,19 @@ export const BuilderToolBar : React.FC<Props> = ({action}) => {
 
 	return (
 		<Center pos={'fixed'} h={'100vh'} right={0} zIndex={9}>
-			<Box display={'flex'} flexDir={'column'} alignItems={'end'} p={'20px'}>
+			
+			<Box display={'flex'} flexDir={'column'} alignItems={'end'} p={'20px'} cursor={'pointer'}>
+				<Box 
+					transition={'.3s'} 
+					_hover={{transform: 'translateY(-5px)', transition: '.3s'}} 
+					mb={'20px'} 
+					textAlign={'center'} 
+					onClick={save} >
+					<Center h={'45px'} w={'45px'} bg={'white'} rounded={'100%'}>
+						<AiOutlineSave size={20} />
+					</Center>
+					<Text fontWeight={'bold'} color={'white'} fontSize={'12px'}>Save</Text>
+				</Box>
 				{
 					_tmp.map((item, key) => (
 						<Box  key={key} display={item.subs ? "flex" : "inherit"} flexDir={'row-reverse'} cursor={'pointer'}>
