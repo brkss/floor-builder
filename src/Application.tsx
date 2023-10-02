@@ -10,7 +10,7 @@ import {
 } from './helpers'
 import { ActionInfo } from './ActionInfo';
 import { COLORS } from './constants';
-import { mapEncoder } from './parser';
+import { mapEncoder } from './encoder';
 
 export const Application : React.FC = () => {
 
